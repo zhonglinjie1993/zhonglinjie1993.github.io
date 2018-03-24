@@ -79,13 +79,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="Spring 事务管理数据库事物的基础知识Spring 虽然提供了灵活方便的事务管理功能,但是这些功能都是基于数据库底层的的事务处理功能实现的,所以首先要了解数据库本身的事务 数据库事务的特性 原子性–只有所有的操作都执行成功 这个事务才会被提交 一致性–事务操作成功以后,数据库所处的状态和它的业务规则是一致的  A转给B 100 块钱, 不管成功与否, A和B 的存款总额是不会变得 隔离性– 在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring 事务管理">
+<meta property="og:url" content="http://yoursite.com/2018/03/24/spring事物/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Spring 事务管理数据库事物的基础知识Spring 虽然提供了灵活方便的事务管理功能,但是这些功能都是基于数据库底层的的事务处理功能实现的,所以首先要了解数据库本身的事务 数据库事务的特性 原子性–只有所有的操作都执行成功 这个事务才会被提交 一致性–事务操作成功以后,数据库所处的状态和它的业务规则是一致的  A转给B 100 块钱, 不管成功与否, A和B 的存款总额是不会变得 隔离性– 在">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-24T03:51:22.393Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Spring 事务管理">
+<meta name="twitter:description" content="Spring 事务管理数据库事物的基础知识Spring 虽然提供了灵活方便的事务管理功能,但是这些功能都是基于数据库底层的的事务处理功能实现的,所以首先要了解数据库本身的事务 数据库事务的特性 原子性–只有所有的操作都执行成功 这个事务才会被提交 一致性–事务操作成功以后,数据库所处的状态和它的业务规则是一致的  A转给B 100 块钱, 不管成功与否, A和B 的存款总额是不会变得 隔离性– 在">
 
 
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/03/24/spring事物/"/>
 
 
 
 
 
-  <title>Hexo</title>
+  <title>Spring 事务管理 | Hexo</title>
   
 
 
@@ -140,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -224,9 +227,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -256,9 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/24/spring事物/" itemprop="url">Spring 事务管理</a></h1>
+          <h1 class="post-title" itemprop="name headline">Spring 事务管理</h1>
         
 
         <div class="post-meta">
@@ -330,9 +331,7 @@
       
 
       
-        
-          
-            <h1 id="Spring-事务管理"><a href="#Spring-事务管理" class="headerlink" title="Spring 事务管理"></a>Spring 事务管理</h1><h4 id="数据库事物的基础知识"><a href="#数据库事物的基础知识" class="headerlink" title="数据库事物的基础知识"></a>数据库事物的基础知识</h4><p>Spring 虽然提供了灵活方便的事务管理功能,但是这些功能都是基于数据库底层的的事务处理功能实现的,所以首先要了解数据库本身的事务</p>
+        <h1 id="Spring-事务管理"><a href="#Spring-事务管理" class="headerlink" title="Spring 事务管理"></a>Spring 事务管理</h1><h4 id="数据库事物的基础知识"><a href="#数据库事物的基础知识" class="headerlink" title="数据库事物的基础知识"></a>数据库事物的基础知识</h4><p>Spring 虽然提供了灵活方便的事务管理功能,但是这些功能都是基于数据库底层的的事务处理功能实现的,所以首先要了解数据库本身的事务</p>
 <h5 id="数据库事务的特性"><a href="#数据库事务的特性" class="headerlink" title="数据库事务的特性"></a>数据库事务的特性</h5><ol>
 <li>原子性–只有所有的操作都执行成功 这个事务才会被提交</li>
 <li>一致性–事务操作成功以后,数据库所处的状态和它的业务规则是一致的  A转给B 100 块钱, 不管成功与否, A和B 的存款总额是不会变得</li>
@@ -345,8 +344,6 @@
 <p>和java 程序采用对象锁机制进行线程同步类型, 数据库采用数据库锁机制保证事务的隔离性,当有多个事务试图对相同的数据进行操作时候, 只有拥有锁的事务才能操作数据, Oracle 数据库还采用了数据版本的机制</p>
 <p>##### </p>
 
-          
-        
       
     </div>
     
@@ -363,154 +360,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/23/README/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zhonglinjie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/23/README/" itemprop="url">第一篇博客</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-23T21:12:36+08:00">
-                2018-03-23
-              </time>
+              <a href="/2018/03/23/README/" rel="next" title="第一篇博客">
+                <i class="fa fa-chevron-left"></i> 第一篇博客
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/测试/" itemprop="url" rel="index">
-                    <span itemprop="name">测试</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>测试文本   2018年3月23日22:38:23</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -520,10 +391,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -531,6 +403,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -551,8 +427,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -607,6 +492,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-事务管理"><span class="nav-number">1.</span> <span class="nav-text">Spring 事务管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据库事物的基础知识"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">数据库事物的基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#数据库事务的特性"><span class="nav-number">1.0.0.1.1.</span> <span class="nav-text">数据库事务的特性</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -747,6 +648,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

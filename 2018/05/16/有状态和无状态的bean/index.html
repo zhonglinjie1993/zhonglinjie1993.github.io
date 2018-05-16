@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="测试文本   2018年3月23日22:38:23">
+<meta name="description" content="有状态会话bean ：每个用户有自己特有的一个实例，在用户的生存期内，bean保持了用户的信息，即“有状态”；一旦用户灭亡（调用结束或实例结束），bean的生命期也告结束。即每个用户最初都会得到一个初始的bean。  无状态会话bean ：bean一旦实例化就被加进会话池中，各个用户都可以共用。即使用户已经消亡，bean 的生命期也不一定结束，它可能依然存在于会话池中，供其他用户调用。由于没有特定">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第一篇博客">
-<meta property="og:url" content="http://yoursite.com/2018/03/23/README/index.html">
+<meta property="og:title" content="有状态bean和无状态的bean">
+<meta property="og:url" content="http://yoursite.com/2018/05/16/有状态和无状态的bean/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="测试文本   2018年3月23日22:38:23">
+<meta property="og:description" content="有状态会话bean ：每个用户有自己特有的一个实例，在用户的生存期内，bean保持了用户的信息，即“有状态”；一旦用户灭亡（调用结束或实例结束），bean的生命期也告结束。即每个用户最初都会得到一个初始的bean。  无状态会话bean ：bean一旦实例化就被加进会话池中，各个用户都可以共用。即使用户已经消亡，bean 的生命期也不一定结束，它可能依然存在于会话池中，供其他用户调用。由于没有特定">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-24T03:55:47.997Z">
+<meta property="og:updated_time" content="2018-05-16T14:56:40.734Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="第一篇博客">
-<meta name="twitter:description" content="测试文本   2018年3月23日22:38:23">
+<meta name="twitter:title" content="有状态bean和无状态的bean">
+<meta name="twitter:description" content="有状态会话bean ：每个用户有自己特有的一个实例，在用户的生存期内，bean保持了用户的信息，即“有状态”；一旦用户灭亡（调用结束或实例结束），bean的生命期也告结束。即每个用户最初都会得到一个初始的bean。  无状态会话bean ：bean一旦实例化就被加进会话池中，各个用户都可以共用。即使用户已经消亡，bean 的生命期也不一定结束，它可能依然存在于会话池中，供其他用户调用。由于没有特定">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/23/README/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/16/有状态和无状态的bean/"/>
 
 
 
 
 
-  <title>第一篇博客 | Hexo</title>
+  <title>有状态bean和无状态的bean | Hexo</title>
   
 
 
@@ -242,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/23/README/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/16/有状态和无状态的bean/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zhonglinjie">
@@ -259,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">第一篇博客</h1>
+          <h1 class="post-title" itemprop="name headline">有状态bean和无状态的bean</h1>
         
 
         <div class="post-meta">
@@ -271,8 +271,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-23T21:12:36+08:00">
-                2018-03-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-16T23:02:47+08:00">
+                2018-05-16
               </time>
             
 
@@ -294,8 +294,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/测试/" itemprop="url" rel="index">
-                    <span itemprop="name">测试</span>
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
                   </a>
                 </span>
 
@@ -331,7 +331,9 @@
       
 
       
-        <p>测试文本   2018年3月23日22:38:23</p>
+        <p>有状态会话bean ：每个用户有自己特有的一个实例，在用户的生存期内，bean保持了用户的信息，即“有状态”；一旦用户灭亡（调用结束或实例结束），bean的生命期也告结束。即每个用户最初都会得到一个初始的bean。 </p>
+<p>无状态会话bean ：bean一旦实例化就被加进会话池中，各个用户都可以共用。即使用户已经消亡，bean 的生命期也不一定结束，它可能依然存在于会话池中，供其他用户调用。由于没有特定的用户，那么也就不能保持某一用户的状态，所以叫无状态bean。但无状态会话bean 并非没有状态，如果它有自己的属性（变量），那么这些变量就会受到所有调用它的用户的影响，这是在实际应用中必须注意的。</p>
+<p>其中bean作用域中的singleton是无状态的作用域,prototype是有状态的作用域…bean的整个生命周期负责：容器在初始化、配置、装饰或者是装配完一个prototype实例后，将它交给客户端，随后就对该prototype实例不闻不问了。不管何种作用域，容器都会调用所有对象的初始化生命周期回调方法。但对prototype而言，任何配置好的析构生命周期回调方法都将不会被调用。清除prototype作用域的对象并释放任何prototype<br>bean所持有的昂贵资源，都是客户端代码的职责。（让Spring容器释放被prototype作用域bean占用资源的一种可行方式是，通过使用bean的后置处理器，该处理器持有要被清除的bean的引用。）</p>
 
       
     </div>
@@ -356,14 +358,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/05/15/MultiValueMap/" rel="next" title="MultiValueMap">
+                <i class="fa fa-chevron-left"></i> MultiValueMap
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/03/24/spring事务/" rel="prev" title="Spring 事务管理">
-                Spring 事务管理 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/05/16/Model/" rel="prev" title="ModelAttribute">
+                ModelAttribute <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

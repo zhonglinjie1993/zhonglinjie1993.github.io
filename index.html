@@ -239,6 +239,320 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/16/Model/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhonglinjie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/16/Model/" itemprop="url">ModelAttribute</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-16T23:02:47+08:00">
+                2018-05-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>1.@ModelAttribute注释方法</strong><br>　　例子（1），（2），（3）类似，被@ModelAttribute注释的方法会在此controller每个方法执行前被执行，因此对于一个controller映射多个URL的用法来说，要谨慎使用。<br>(1）@ModelAttribute注释void返回值的方法 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> 1 @Controller </span><br><span class="line"> 2 public class HelloWorldController &#123; </span><br><span class="line"> 3     @ModelAttribute </span><br><span class="line"> 4     public void populateModel(@RequestParam String abc, Model model) &#123; </span><br><span class="line"> 5          model.addAttribute(&quot;attributeName&quot;, abc); </span><br><span class="line"> 6       &#125; </span><br><span class="line"> 7 </span><br><span class="line"> 8     @RequestMapping(value = &quot;/helloWorld&quot;) </span><br><span class="line"> 9     public String helloWorld() &#123; </span><br><span class="line">10        return &quot;helloWorld&quot;; </span><br><span class="line">11         &#125; </span><br><span class="line">12  &#125;</span><br></pre></td></tr></table></figure>
+<p>　　这个例子，在获得请求/helloWorld 后，populateModel方法在helloWorld方法之前先被调用，它把请求参数（/helloWorld?abc=text）加入到一个名为attributeName的model属性中，在它执行后 helloWorld被调用，返回视图名helloWorld和model已由@ModelAttribute方法生产好了。<br>　　这个例子中model属性名称和model属性对象有model.addAttribute()实现，不过前提是要在方法中加入一个Model类型的参数。<br>　　当URL或者post中不包含次参数时，会报错，其实不需要这个方法，完全可以把请求的方法写成，这样缺少此参数也不会出错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1 @RequestMapping(value = &quot;/helloWorld&quot;) </span><br><span class="line">2 public String helloWorld(String abc) &#123; </span><br><span class="line">3     return &quot;helloWorld&quot;; </span><br><span class="line">4 &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>（2）@ModelAttribute注释返回具体类的方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1 @ModelAttribute </span><br><span class="line">2 public Account addAccount(@RequestParam String number) &#123; </span><br><span class="line">3     return accountManager.findAccount(number); </span><br><span class="line">4 &#125;</span><br></pre></td></tr></table></figure>
+<p>　　这种情况，model属性的名称没有指定，它由返回类型隐含表示，如这个方法返回Account类型，那么这个model属性的名称是account。<br>　　这个例子中model属性名称有返回对象类型隐含表示，model属性对象就是方法的返回值。它无须要特定的参数。</p>
+<p><strong>（3）@ModelAttribute(value=””)注释返回具体类的方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> 1 @Controller </span><br><span class="line"> 2 public class HelloWorldController &#123; </span><br><span class="line"> 3     @ModelAttribute(&quot;attributeName&quot;) </span><br><span class="line"> 4     public String addAccount(@RequestParam String abc) &#123; </span><br><span class="line"> 5         return abc; </span><br><span class="line"> 6       &#125; </span><br><span class="line"> 7 </span><br><span class="line"> 8     @RequestMapping(value = &quot;/helloWorld&quot;) </span><br><span class="line"> 9     public String helloWorld() &#123; </span><br><span class="line">10         return &quot;helloWorld&quot;; </span><br><span class="line">11           &#125; </span><br><span class="line">12    &#125;</span><br></pre></td></tr></table></figure>
+<p>　　这个例子中使用@ModelAttribute注释的value属性，来指定model属性的名称。model属性对象就是方法的返回值。它无须要特定的参数。</p>
+<p><strong>（4）@ModelAttribute和@RequestMapping同时注释一个方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1 @Controller </span><br><span class="line">2 public class HelloWorldController &#123; </span><br><span class="line">3     @RequestMapping(value = &quot;/helloWorld.do&quot;) </span><br><span class="line">4     @ModelAttribute(&quot;attributeName&quot;) </span><br><span class="line">5     public String helloWorld() &#123; </span><br><span class="line">6          return &quot;hi&quot;; </span><br><span class="line">7       &#125; </span><br><span class="line">8   &#125;</span><br></pre></td></tr></table></figure>
+<p>　　这时这个方法的返回值并不是表示一个视图名称，而是model属性的值，视图名称由RequestToViewNameTranslator根据请求”/helloWorld.do”转换为逻辑视图helloWorld。<br>Model属性名称有@ModelAttribute(value=””)指定，相当于在request中封装了key=attributeName，value=hi。</p>
+<p><strong>2.@ModelAttribute注释一个方法的参数</strong><br><strong>（1）从model中获取</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> 1 @Controller </span><br><span class="line"> 2 public class HelloWorldController &#123; </span><br><span class="line"> 3     @ModelAttribute(&quot;user&quot;) </span><br><span class="line"> 4     public User addAccount() &#123; </span><br><span class="line"> 5         return new User(&quot;jz&quot;,&quot;123&quot;); </span><br><span class="line"> 6      &#125; </span><br><span class="line"> 7 </span><br><span class="line"> 8     @RequestMapping(value = &quot;/helloWorld&quot;) </span><br><span class="line"> 9     public String helloWorld(@ModelAttribute(&quot;user&quot;) User user) &#123; </span><br><span class="line">10            user.setUserName(&quot;jizhou&quot;); </span><br><span class="line">11            return &quot;helloWorld&quot;; </span><br><span class="line">12         &#125; </span><br><span class="line">13   &#125;</span><br></pre></td></tr></table></figure>
+<p>　　在这个例子里，@ModelAttribute(“user”) User user注释方法参数，参数user的值来源于addAccount()方法中的model属性。<br>　　此时如果方法体没有标注@SessionAttributes(“user”)，那么scope为request，如果标注了，那么scope为session</p>
+<p><strong>（2）从Form表单或URL参数中获取（实际上，不做此注释也能拿到user对象）</strong></p>
+<p>　　@ModelAttribute具有如下三个作用：</p>
+<p>　①绑定请求参数到命令对象：放在功能处理方法的入参上时，用于将多个请求参数绑定到一个命令对象，从而简化绑定流程，而且自动暴露为模型数据用于视图页面展示时使用。</p>
+<p>　　其实　 @ModelAttribute 此处对于供视图页面展示来说与 model.addAttribute(“attributeName”, abc); 功能类似。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1 @Controller </span><br><span class="line">2 public class HelloWorldController &#123; </span><br><span class="line">3     @RequestMapping(value = &quot;/helloWorld&quot;) </span><br><span class="line">4     public String helloWorld(@ModelAttribute User user) &#123; </span><br><span class="line">5         return &quot;helloWorld&quot;; </span><br><span class="line">6      &#125; </span><br><span class="line">7 &#125;</span><br></pre></td></tr></table></figure>
+<p>　　<strong>此处多了一个注解@ModelAttribute(“user”)，它的作用是将该绑定的命令对象以“user”为名称添加到模型对象中供视图页面展示使用。我们此时可以在视图页面使用${user.username}来获取绑定的命令对象的属性。</strong>　</p>
+<p>　</p>
+<p>　　②暴露@RequestMapping 方法返回值为模型数据：放在功能处理方法的返回值上时，是暴露功能处理方法的返回值为模型数据，用于视图页面展示时使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public @ModelAttribute(&quot;user2&quot;) UserModel test3(@ModelAttribute(&quot;user2&quot;) UserModel user)</span><br></pre></td></tr></table></figure>
+<p>　　大家可以看到返回值类型是命令对象类型，而且通过 @ModelAttribute(“user2”) 注解，此时会暴露返回值到模型数据（ 名字为user2 ） 中供视图展示使用</p>
+<p>　　 @ModelAttribute  注解的返回值会覆盖 @RequestMapping  注解方法中的 @ModelAttribute  注解的同名命令对象</p>
+<p>　　③暴露表单引用对象为模型数据：放在处理器的一般方法（非功能处理方法）上时，是为表单准备要展示的表单引用对象，如注册时需要选择的所在城市等，而且在执行功能处理方法（ @RequestMapping  注解的方法）之前，自动添加到模型对象中，用于视图页面展示时使用；</p>
+<p>　　<strong>注意这时候这个User类一定要有没有参数的构造函数。</strong></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/16/有状态和无状态的bean/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhonglinjie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/16/有状态和无状态的bean/" itemprop="url">有状态bean和无状态的bean</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-16T23:02:47+08:00">
+                2018-05-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>有状态会话bean ：每个用户有自己特有的一个实例，在用户的生存期内，bean保持了用户的信息，即“有状态”；一旦用户灭亡（调用结束或实例结束），bean的生命期也告结束。即每个用户最初都会得到一个初始的bean。 </p>
+<p>无状态会话bean ：bean一旦实例化就被加进会话池中，各个用户都可以共用。即使用户已经消亡，bean 的生命期也不一定结束，它可能依然存在于会话池中，供其他用户调用。由于没有特定的用户，那么也就不能保持某一用户的状态，所以叫无状态bean。但无状态会话bean 并非没有状态，如果它有自己的属性（变量），那么这些变量就会受到所有调用它的用户的影响，这是在实际应用中必须注意的。</p>
+<p>其中bean作用域中的singleton是无状态的作用域,prototype是有状态的作用域…bean的整个生命周期负责：容器在初始化、配置、装饰或者是装配完一个prototype实例后，将它交给客户端，随后就对该prototype实例不闻不问了。不管何种作用域，容器都会调用所有对象的初始化生命周期回调方法。但对prototype而言，任何配置好的析构生命周期回调方法都将不会被调用。清除prototype作用域的对象并释放任何prototype<br>bean所持有的昂贵资源，都是客户端代码的职责。（让Spring容器释放被prototype作用域bean占用资源的一种可行方式是，通过使用bean的后置处理器，该处理器持有要被清除的bean的引用。）</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/15/MultiValueMap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -993,7 +1307,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

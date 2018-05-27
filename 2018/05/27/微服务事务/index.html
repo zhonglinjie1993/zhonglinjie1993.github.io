@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="今天面试被多次问答微服务的事务,特此总结一下 什么是微服务事务/为什么要做微服务事务简单的说，就是一次大的操作由不同的小操作组成，这些小的操作分布在不同的服务器上，且属于不同的应用，分布式事务需要保证这些小操作要么全部成功，要么全部失败。本质上来说，分布式事务就是为了保证不同数据库的数据一致性。 分布式事务产生的原因 数据库分库分表:当数据库单表一年产生的数据超过1000W，那么就要考虑分库分表，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务事务">
+<meta property="og:url" content="http://yoursite.com/2018/05/27/微服务事务/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="今天面试被多次问答微服务的事务,特此总结一下 什么是微服务事务/为什么要做微服务事务简单的说，就是一次大的操作由不同的小操作组成，这些小的操作分布在不同的服务器上，且属于不同的应用，分布式事务需要保证这些小操作要么全部成功，要么全部失败。本质上来说，分布式事务就是为了保证不同数据库的数据一致性。 分布式事务产生的原因 数据库分库分表:当数据库单表一年产生的数据超过1000W，那么就要考虑分库分表，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p65d81xes.bkt.clouddn.com/201805230016_550.png">
+<meta property="og:image" content="http://p65d81xes.bkt.clouddn.com/201805242309_611.png">
+<meta property="og:image" content="http://p65d81xes.bkt.clouddn.com/201805252311_692.png">
+<meta property="og:image" content="http://p65d81xes.bkt.clouddn.com/201805252341_715.png">
+<meta property="og:updated_time" content="2018-05-27T14:29:34.180Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微服务事务">
+<meta name="twitter:description" content="今天面试被多次问答微服务的事务,特此总结一下 什么是微服务事务/为什么要做微服务事务简单的说，就是一次大的操作由不同的小操作组成，这些小的操作分布在不同的服务器上，且属于不同的应用，分布式事务需要保证这些小操作要么全部成功，要么全部失败。本质上来说，分布式事务就是为了保证不同数据库的数据一致性。 分布式事务产生的原因 数据库分库分表:当数据库单表一年产生的数据超过1000W，那么就要考虑分库分表，">
+<meta name="twitter:image" content="http://p65d81xes.bkt.clouddn.com/201805230016_550.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/27/微服务事务/"/>
+
+
+
+
+
+  <title>微服务事务 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/something" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            有料
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/27/微服务事务/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zhonglinjie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">微服务事务</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-27T22:29:49+08:00">
+                2018-05-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/微服务/" itemprop="url" rel="index">
+                    <span itemprop="name">微服务</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天面试被多次问答微服务的事务,特此总结一下</p>
+<h2 id="什么是微服务事务-为什么要做微服务事务"><a href="#什么是微服务事务-为什么要做微服务事务" class="headerlink" title="什么是微服务事务/为什么要做微服务事务"></a>什么是微服务事务/为什么要做微服务事务</h2><p>简单的说，就是一次大的操作由不同的小操作组成，这些小的操作分布在不同的服务器上，且属于不同的应用，分布式事务需要保证这些小操作要么全部成功，要么全部失败。本质上来说，<u>分布式事务就是为了保证不同数据库的数据一致性。</u></p>
+<h2 id="分布式事务产生的原因"><a href="#分布式事务产生的原因" class="headerlink" title="分布式事务产生的原因"></a>分布式事务产生的原因</h2><ol>
+<li>数据库分库分表:当数据库单表一年产生的数据超过1000W，那么就要考虑分库分表，简单的说就是原来的一个数据库变成了多个数据库。这时候，如果一个操作既访问01库，又访问02库，而且要保证数据的一致性，那么就要用到分布式事务。 </li>
+<li>所谓的SOA化，就是业务的服务化:比如原来单机支撑了整个电商网站，现在对整个网站进行拆解，分离出了订单中心、用户中心、库存中心。对于订单中心，有专门的数据库存储订单信息，用户中心也有专门的数据库存储用户信息，库存中心也会有专门的数据库存储库存信息。这时候如果要同时对订单和库存进行操作，那么就会涉及到订单数据库和库存数据库，为了保证数据一致性，就需要用到分布式事务。 </li>
+</ol>
+<p><img src="http://p65d81xes.bkt.clouddn.com/201805230016_550.png" alt=""></p>
+<h2 id="事务的ACID原则"><a href="#事务的ACID原则" class="headerlink" title="事务的ACID原则"></a>事务的ACID原则</h2><p>A:原子性:要么一起成功,要么一起失败, 如果失败的话,就要回滚事务</p>
+<p>B:一致性:a有100块, b有20块,a转账给b60块 , 不管并发是多少,不管发生什么, 只要在一个事务内, 事务成功了, 那么最终的结果必定是a账户有40, b账户有80</p>
+<p>C:隔离性:事务之间不会相互影响, 一个事务不会被其他事务感知</p>
+<p>D:持久性:一个事务完成, 事务对数据的操作必定会被存到数据库中</p>
+<h2 id="事务的使用场景"><a href="#事务的使用场景" class="headerlink" title="事务的使用场景"></a>事务的使用场景</h2><p>1.支付: 一笔支付, 买家账户的钱少了, 卖家账户的钱加了,这些操作必定在一个事务里面, 要么一起成功, 要么一起失败;买家属于买家的服务, 对应买家的数据库, 卖家属于卖家的服务, 对应卖家的数据库, 对应不同的数据库, 但是属于同一个事务.这里必定牵扯到分布式的事务</p>
+<p>2.下单:如上文所述, 下单–&gt; 更新订单 –&gt; 减库存</p>
+<h2 id="怎么做微服务的事务"><a href="#怎么做微服务的事务" class="headerlink" title="　怎么做微服务的事务"></a>　怎么做微服务的事务</h2><h3 id="数据库本身提供的事务解决方案"><a href="#数据库本身提供的事务解决方案" class="headerlink" title="数据库本身提供的事务解决方案"></a>数据库本身提供的事务解决方案</h3><p>oracle 和 mysql 都支持xa(跨数据库事务)</p>
+<ul>
+<li>资源管理器（resource manager）：用来管理系统资源，是通向事务资源的途径。数据库就是一种资源管理器。资源管理还应该具有管理事务提交或回滚的能力。</li>
+<li>事务管理器（transaction manager）：事务管理器是分布式事务的核心管理者。事务管理器与每个资源管理器（resource manager）进行通信，协调并完成事务的处理。事务的各个分支由唯一命名进行标识。</li>
+</ul>
+<p>mysql在执行分布式事务（外部XA）的时候，mysql服务器相当于xa事务资源管理器，与mysql链接的客户端相当于事务管理器。</p>
+<p><img src="http://p65d81xes.bkt.clouddn.com/201805242309_611.png" alt=""></p>
+<p>​    缺点</p>
+<ul>
+<li>两阶段提交中的第二阶段, 协调者需要等待所有参与者发出yes请求, 或者一个参与者发出no请求后, 才能执行提交或者中断操作. 这会造成<strong>长时间同时锁住多个资源, 造成性能瓶颈</strong>, 如果参与者有一个耗时长的操作, 性能损耗会更明显.</li>
+<li>XA无法满足高并发场景。XA目前在商业数据库支持的比较理想，在mysql数据库中支持的不太理想，mysql的XA实现，没有记录prepare阶段日志，主备切换回导致主库与备库数据不一致。许多nosql也没有支持XA，这让XA的应用场景变得非常狭隘 </li>
+</ul>
+<h3 id="消息事务-最终一致性–异步"><a href="#消息事务-最终一致性–异步" class="headerlink" title="消息事务+最终一致性–异步"></a>消息事务+最终一致性–异步</h3><p><img src="http://p65d81xes.bkt.clouddn.com/201805252311_692.png" alt=""></p>
+<p>原理: 基于消息中间件的两阶段提交往往用在高并发场景下，将一个分布式事务拆成一个消息事务（A系统的本地操作+发消息）+B系统的本地操作，其中B系统的操作由消息驱动，只要消息事务成功，那么A操作一定成功，消息也一定发出来了，这时候B会收到消息去执行本地操作，如果本地操作失败，消息会重投，直到B操作成功，这样就变相地实现了A与B的分布式事务 </p>
+<p> 适用场景</p>
+<ul>
+<li>执行周期较长</li>
+<li>实时性要求不高</li>
+</ul>
+<p>例如:</p>
+<ul>
+<li>跨行转账/汇款业务(两个服务分别在不同的银行中)</li>
+<li>退货/退款业务</li>
+<li>财务, 账单统计业务(先发送到消息中间件, 然后进行批量记账)</li>
+</ul>
+<p>缺点：</p>
+<p>消息方案从本质上讲是将分布式事务转换为两个本地事务，然后依靠下游业务的重试机制达到最终一致性。基于消息的最终一致性方案对应用侵入性也很高，应用需要进行大量业务改造，成本较高。 </p>
+<h3 id="TCC模式"><a href="#TCC模式" class="headerlink" title="TCC模式"></a>TCC模式</h3><p><img src="http://p65d81xes.bkt.clouddn.com/201805252341_715.png" alt=""></p>
+<p>例子讲解: 付款操作举例</p>
+<p>Try: </p>
+<p>​    完成所有的业务检查(一致性),预留必须业务资源(准隔离性)</p>
+<p>​    确认客户账户中必须有足够的余额支付(一致性),锁住客户, 商户账户,一致性</p>
+<p>Confrim:</p>
+<p>​    使用Try阶段预留的业务资源执行业务(业务操作必须是幂等性),如果操作异常, 需要重试</p>
+<p>​    这里执行的操作, 就是执行客户扣款, 商户账户入账操作</p>
+<p>Cancle:</p>
+<p>​     释放Try阶段预留的业务资源,这这里就是释放客户账户和商户账户的锁</p>
+<p>​    如果任一子业务在Confirm阶段有操作无法执行成功, 会造成对业务活动管理器的响应超时, 此时要对其他业务执行补偿性事务. 如果补偿操作执行也出现异常, 必须进行重试, 若实在无法执行成功, 则事务管理器必须能够感知到失败的操作, 进行log(用于事后人工进行补偿性事务操作或者交由中间件接管在之后进行补偿性事务操作). </p>
+<p><strong>优点：</strong> 跟2PC比起来，实现以及流程相对简单了一些，但数据的一致性比2PC也要差一些</p>
+<p><strong>缺点：</strong> 缺点还是比较明显的，在2,3步中都有可能失败。TCC属于应用层的一种补偿方式，所以需要程序员在实现的时候多写很多补偿的代码，在一些场景中，一些业务流程可能用TCC不太好定义及处理。</p>
+<p>适用场景:</p>
+<ul>
+<li>严格一致性</li>
+<li>执行时间短</li>
+<li>实时性要求高</li>
+</ul>
+<p>举例: 红包, 收付款业务.</p>
+<h3 id="GTS–分布式事务解决方案"><a href="#GTS–分布式事务解决方案" class="headerlink" title="GTS–分布式事务解决方案"></a>GTS–分布式事务解决方案</h3><p>也是使用了TCC模式</p>
+<h2 id=""><a href="#" class="headerlink" title="　"></a>　</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/16/Model/" rel="next" title="ModelAttribute">
+                <i class="fa fa-chevron-left"></i> ModelAttribute
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.jpg"
+                alt="zhonglinjie" />
+            
+              <p class="site-author-name" itemprop="name">zhonglinjie</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是微服务事务-为什么要做微服务事务"><span class="nav-number">1.</span> <span class="nav-text">什么是微服务事务/为什么要做微服务事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式事务产生的原因"><span class="nav-number">2.</span> <span class="nav-text">分布式事务产生的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务的ACID原则"><span class="nav-number">3.</span> <span class="nav-text">事务的ACID原则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务的使用场景"><span class="nav-number">4.</span> <span class="nav-text">事务的使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么做微服务的事务"><span class="nav-number">5.</span> <span class="nav-text">　怎么做微服务的事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库本身提供的事务解决方案"><span class="nav-number">5.1.</span> <span class="nav-text">数据库本身提供的事务解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息事务-最终一致性–异步"><span class="nav-number">5.2.</span> <span class="nav-text">消息事务+最终一致性–异步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCC模式"><span class="nav-number">5.3.</span> <span class="nav-text">TCC模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GTS–分布式事务解决方案"><span class="nav-number">5.4.</span> <span class="nav-text">GTS–分布式事务解决方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">6.</span> <span class="nav-text">　</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhonglinjie</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
